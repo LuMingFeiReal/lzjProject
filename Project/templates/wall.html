@@ -1,0 +1,103 @@
+{% extends 'components/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+新闻资讯-曝光墙
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myHTML/css/wall-style.css' %}">
+<script src="{% static 'myHTML/js/masonry.pkgd.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'myHTML/js/imagesloaded.pkgd.min.js' %}" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
+{% block content %}
+<ol class="my-layout my-breadcrumb  clearfix">
+    <li>当前位置：</li>
+    <li><a href="{% url 'home' %}">主页</a></li>
+    <li>&nbsp;>&nbsp;曝光墙</li>
+</ol>
+    
+<div class="my-layout wall-main clearfix">
+    <div role="tabpanel" class="wall-content">
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'addpage' %}" class="btn btn-primary publish">发表文章</a>
+        {% else %}
+        <a class="btn btn-primary publish" data-toggle="modal" data-target="#myModal" data-backdrop="static" onclick="choose_login()">登陆后可发表文章</a>
+        {% endif %}
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"> <a href="#panel-1" aria-controls="panel-1" role="tab" data-toggle="tab">红名单</a></li>
+            <li role="presentation"> <a href="#panel-2" aria-controls="panel-2" role="tab" data-toggle="tab">黑名单</a> </li>
+        </ul> <!-- Tab panels -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="panel-1">
+                <div class="row masonry-container">
+                    {% for one in red %}
+                    <div class="col-md-4 col-sm-6 item">
+                        <div class="thumbnail">
+                            <img src="{{ one.pic }}">
+                            <div class="caption clearfix">
+                                <h3>{{ one.title }}</h3>
+                                <p>{{ one.first_p }}</p>
+                                <p class="for-detail"><a href="{% url 'detail' one.uniquekey %}" class="btn btn-default tr" role="button"> 查看详情</a></p>
+                            </div>
+                        </div>
+                    </div>   
+                    {% endfor %}
+                </div>
+            
+                <!--End masonry-container -->
+            </div>
+            <!--End panel-1 -->
+            <div role="tabpanel" class="tab-pane" id="panel-2">
+                <div class="row masonry-container">
+                    {% for one in black %}
+                    <div class="col-md-4 col-sm-6 item">
+                        <div class="thumbnail">
+                            <img src="{{ one.pic }}">
+                            <div class="caption clearfix">
+                                <h3>{{ one.title }}</h3>
+                                <p>{{ one.first_p }}</p>
+                                <p class="for-detail"><a href="{% url 'detail' one.uniquekey %}" class="btn btn-default tr" role="button"> 查看详情</a></p>
+                            </div>
+                        </div>
+                    </div>   
+                    {% endfor %}
+
+                </div>
+            </div>
+            <!--End panel-2 -->
+        </div>
+        <!--End tab-content -->
+    </div>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+	$("#bgq").addClass("my-nav-active");
+
+	var $container = $('.masonry-container');
+	$container.imagesLoaded(function() {
+		$container.masonry({
+			columnWidth: '.item',
+			itemSelector: '.item'
+		});
+	});
+	
+
+	$('a[data-toggle=tab]').each(function() {
+		var $this = $(this);
+		$this.on('shown.bs.tab', function() {
+			$container.imagesLoaded(function() {
+				$container.masonry({
+					columnWidth: '.item',
+					itemSelector: '.item'
+				});
+			});
+		});
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,20 @@
+body{
+    background-color: #f0f0f0;	
+}
+
+.wall-content{
+    margin: 10px 30px;
+}
+.wall-main{
+    min-height: 1000px;
+}
+.tab-content{
+    margin-top: 20px;
+}
+
+.publish{
+    float: right;
+}
+.for-detail{
+    margin-top: 10px;
+}

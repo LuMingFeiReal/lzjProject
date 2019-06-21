@@ -1,0 +1,112 @@
+{% extends 'mobile/mbase.html' %}
+
+{% block head %}
+{{ news_up.0.category.category_ch }}
+{% endblock %}
+{% block up_style %}
+<style>
+	.text-p{
+		display: inline-block;
+		margin: 0 0px;
+	}
+	.news-top{
+		margin-right: 20px;
+		color: red;
+	}
+	.body-main{
+		margin-top: 0;
+	}
+	.nav-bg{
+		background-color: rgb(240, 248, 255);
+	}
+	.home-top:first-child{
+		border-top: none;
+		margin-top: 2px;
+	}
+
+</style>
+
+{% endblock %}
+
+{% block main %}
+    <div data-am-widget="list_news" class="am-list-news am-list-news-default my-car">
+        <div data-am-widget="slider" class="am-slider am-slider-c1 my-car" data-am-slider='{&quot;directionNav&quot;:false}' >
+            <ul class="am-slides" id="carousel">
+                {% for one in news_car %}
+                <li>
+					<a href="{% url 'mdetail' one.uniquekey %}">
+						<img src="{{ one.thumbnail_pic }}">
+						<div class="am-slider-desc">{{ one.title }}</div>
+					</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+
+        <div class="am-list-news-bd">
+            <ul id="news-body" class="am-list">
+				{% for one in news_top %}
+				<li class="am-g am-list-item-desced home-top">
+					<a href="{% url 'mdetail' one.uniquekey %}" class="am-list-item-hd ">{{ one.title }}</a>
+					<div class="am-list-item-text">
+						<p class="text-p news-top"><i class="am-icon-fire am-icon-fw"></i>置顶</p>
+						<p class="text-p" >{{ one.author_name }}</p>
+					</div>
+				</li>
+				{% endfor %}
+            </ul>	
+        </div>     
+    </div>
+	<p class="wait" id="loading"><span class="am-icon-cog am-animation-spin"></span>&nbsp;加载中.请稍等.</p>
+	<p class="wait" id="no-more" style="display: none;"><span class="am-icon-info-circle"></span>&nbsp;没有更多了</p>
+{% endblock %}
+
+{% block script %}
+<script>
+    $('#{{ news_top.0.category.category_py }}').addClass('am-active');
+
+    var pagenum = 0;
+	var bottomflag = true;
+	var detailurl = '{% url "mdetail" "xxx" %}'
+	function add_news(){
+		data = {}
+        data['pagenum'] = pagenum
+        data['cate'] = '{{ news_top.0.category.category_py }}'
+		$.ajax({
+			type: "get",
+			url: "{% url 'getkindnews' %}",
+			data: data,
+			dataType: "json",
+			success: function (data) {
+				if(data['news_ul'].length){
+					data['news_ul'].forEach(function(item){
+						item['url'] =  detailurl.replace('xxx', item['url']);
+						$('#news-body').append(add_pic_right(item));
+					});
+					bottomflag = true;
+				}else{
+					$('#no-more').show();
+					$('#loading').hide();
+				}
+			},
+			error:function(xhr,state,errorThrown){
+				$('#no-more').show();
+				$('#loading').hide();
+			}
+		});
+	}
+
+	add_news();
+	$(window).scroll(function(){
+		// scroll at bottom
+		if (bottomflag && $(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+			bottomflag = false;
+			pagenum = pagenum + 1;
+			setTimeout(function(){
+				add_news();
+			},2000);
+		}
+    });
+</script>
+{% endblock %}

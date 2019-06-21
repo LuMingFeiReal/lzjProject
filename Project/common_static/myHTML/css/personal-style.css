@@ -1,0 +1,151 @@
+body{
+	background-color: #f5f5f5;
+	font-size: 15px;
+}
+
+/* 左边tab选项 */
+.nav-tab{
+	background-color: white;
+	padding-bottom: 30px;
+}
+.nav-tab a{
+	color: #666;
+}
+.nav>li>a{
+	padding-left: 30px;
+}
+.nav>li>a:focus{
+	background-color: white;
+}
+.nav-tab .active{
+	border-left: 5px #b31e22 solid;
+}
+.nav-tab .active a{
+	padding-left: 25px;
+	color: #b31e22;
+}
+.ptab-title{
+	padding: 10px 30px;
+	color: white;
+	background-color: #b31e22;
+}
+.ptab-title2{
+	margin-top: 10px;
+	padding: 10px 30px;
+	color: #666;
+	font-weight: bold;
+	background-color: #f5f5f5;
+}
+.choose-tab{
+	margin-top: 20px;
+}
+
+
+
+/* tab内容 */
+.tab-content{
+	padding-left: 25px;
+}
+.tab-pane{
+	background-color: white;
+	padding-bottom: 40px;
+	padding-top: 30px;
+}
+h2{
+	color: #666;
+	font-size: 20px;
+	padding: 5px 10px;
+	border-bottom: 1px solid grey;
+	margin: 0px 15px;
+	margin-bottom: 30px;
+}
+
+/* 翻页 */
+.pagination{
+	display: -webkit-box; 
+	-webkit-box-orient: horizontal; 
+	-webkit-box-pack: center; 
+	display: -moz-box; 
+	-moz-box-orient: horizontal; 
+	-moz-box-pack: center; display: -o-box; 
+	-o-box-orient: horizontal; 
+	-o-box-pack: center; display: 
+	-ms-box; -ms-box-orient: horizontal;
+
+	margin-bottom: 5px;
+}
+
+
+/* 个人信息 */
+.personal-tab{
+	width: 450px;
+	margin: 0 auto;
+}
+
+/* 历史记录 */
+.author_span{
+	display: block;
+	width: 145px;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+
+.table{
+	width: 90%;
+	margin: auto;
+}
+
+.table a{
+	display: block;
+	width: 350px;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+
+
+/* 图表 */
+.chart{
+	width: 650px;
+	margin: 0 auto;
+	height: 450px;
+}
+
+.user-keywords{
+	width: 700px;
+	margin: 0 auto;
+	margin-bottom: 50px;
+}
+.user-keywords p{
+	margin-bottom: 10px
+}
+
+.user-keywords span{
+	margin-right: 20px;
+}
+.user-keywords a{
+	color: white;
+}
+
+
+
+/* 修改密码 */
+.reset-password-tab{
+	width: 400px;
+	padding: 50px 0;
+	margin: 0 auto;
+}
+.reset-button{
+	margin-top: 50px;
+}
+
+.home-footer{
+	display: none;
+}
+
+.ps{
+	color: grey;
+	text-align: center;
+	line-height: 30px;
+}

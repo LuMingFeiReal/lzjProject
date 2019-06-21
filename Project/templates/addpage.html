@@ -1,0 +1,215 @@
+{% extends 'components/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+新闻资讯-发表文章
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myHTML/css/addarticle-style.css' %}">
+{% endblock %}
+
+{% block content %}
+<ol class="my-layout my-breadcrumb  clearfix">
+	<li>当前位置：</li>
+    <li><a href="{% url 'home' %}">主页</a></li>
+    <li>&nbsp;>&nbsp;</li>
+    <li><a href="{% url 'wall' %}">曝光墙</a></li>
+	<li>&nbsp;>&nbsp;发表文章</li>
+</ol>
+
+<div class="my-layout clearfix">
+    <h2>发表文章</h2> 
+
+    <form action=""  id="article">
+        <div class="form-group clearfix">
+            <label class="form-title control-label">文章标题</label>
+            <div class="input-title tl">
+                <input type="text" name="title" class="form-control input-sm" id="title1">
+            </div>
+        </div>
+
+        <div class="form-group clearfix">
+            <label class="form-title control-label">插入文本</label>
+            <textarea class="form-control article-form-control" rows="3" name="text"></textarea>
+            <div class="form-right text-right">
+                <span><a href="javascript:void(0)" onclick="javascript:add_pic(this)"><span class="glyphicon glyphicon-plus"> 添加图片</span></a></span>
+                <span class="hidden"><a href="javascript:void(0)"><span class="glyphicon glyphicon-minus"> 删除本栏</span></a></span>
+            </div>
+        </div>
+
+
+        <div class="form-group clearfix">
+            <label class="form-title control-label">插入图片</label>
+            <div class="show-pic">
+                <p style="font-size:28px;text-align:center;">请先选择图片</p>
+            </div>
+            
+            <div class="form-right article-form-group pic-right">
+                <input class="file upload-pic" type="file" name='pic' onchange="selectFile(this)" accept="image/jpeg,image/jpg,image/png"/>
+                <span><a href="javascript:void(0)" onclick="add_pic(this)"><span class="glyphicon glyphicon-plus"> 添加图片</span></a></span>
+                <span><a href="javascript:void(0)" onclick="add_text(this)"><span class="glyphicon glyphicon-plus"> 添加文本</span></a></span>
+                <span class="hidden"><a href="javascript:void(0)"><span class="glyphicon glyphicon-minus"> 删除本栏</span></a></span>
+            </div>
+        </div>
+
+        <div class="form-group clearfix">
+                <label class="form-title control-label">文章类型</label>
+                <div class="checkbox tl">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                            红名单
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                            黑名单
+                        </label>
+                    </div>
+                
+                </div>
+            </div>
+    </form>
+    <button class="btn btn-primary upload-btn" onclick="cf_upload()">发表</button>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript">
+    function selectFile(obj) {
+        var files = obj.files;
+        // console.log(files[0]);
+        if (files.length == 0) {
+            return;
+        }
+        var file = files[0];
+        flist = file.name.split('.');
+        ftype = flist[flist.length - 1].toUpperCase();
+        if(ftype != 'PNG'&&ftype != 'JPG'&&ftype != 'JPEG'){
+            alert('图片类型错误');
+            obj.value = '';
+            return;
+        }
+        //把上传的图片显示出来
+        var reader = new FileReader();
+        // 将文件以Data URL形式进行读入页面
+        // console.log(reader);
+        
+        reader.readAsBinaryString(file);
+        reader.onload = function(f) {
+            // var result = document.getElementById(show_idName);
+            var src = "data:" + file.type + ";base64," + window.btoa(this.result);
+            $(obj.parentNode).prev().html('<img src ="' + src + '"/>');
+        }
+        console.log('file', file);
+
+        // form.append('file', file);
+        // console.log(form.get('file'));
+    }
+    
+
+    //上传文章
+    function upload() {
+        var formdata = new FormData();
+        var name = 'name';
+        var x = new Array();
+        var count = 0;
+        var flag = true;
+        $("#article").find('input,textarea').each(function(index, obj) {
+            if(!flag){
+                return;
+            }
+            if(obj.value == ''){
+                alert('有未填写部分，请补全');
+                flag = false;
+                return;
+            }
+            switch ($(obj).prop('name')) {
+                case 'title':
+                    formdata.append('title', $(obj).val());
+                    break;
+                case 'pic':
+                    formdata.append(name + count,obj.files[0]);
+                    x[count ++] = 'pic';
+                    break;
+                case 'text':
+                    formdata.append(name + count,$(obj).val());
+                    x[count ++] = 'text';
+                    break;
+                case 'optionsRadios':
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        if(flag){
+            if($('#optionsRadios1').is(':checked')){
+                formdata.append('article_type', 1);
+            }else{
+                formdata.append('article_type', 0);
+            }
+            
+            formdata.append("type", x);
+            formdata.append("csrfmiddlewaretoken",'{{ csrf_token }}')
+
+            $.ajax({
+                url: "{% url 'add_article' %}",
+                type: "post",
+                processData: false,
+                contentType: false,
+                data: formdata,
+                success: function (data) {
+                    if(data == "{{ SUCCESS }}"){
+                        alert('发表成功');
+                        $(location).attr('href', '{% url "wall" %}');
+                    }
+                }
+            });
+        }
+    }
+
+    //确认提交文章
+    function cf_upload(){
+        if(confirm('确定提交吗？')){
+            upload();
+        }
+    }
+    
+    
+    
+    function add_pic(obj){
+        html =	'<div class="form-group clearfix">' +
+                    '<label class="form-title control-label">插入图片</label>'+
+                    '<div class="show-pic"></div>' +
+                    '<div class="form-right pic-right">' +
+                        '<input class="upload-pic" type="file" name="pic" onchange="selectFile(this)" accept="image/jpeg,image/jpg,image/png"/>' +
+                        '<span><a href="javascript:void(0)" onclick="add_pic(this)"><span class="glyphicon glyphicon-plus"> 添加图片</span></a></span>' +
+                        '<span><a href="javascript:void(0)" onclick="add_text(this)"><span class="glyphicon glyphicon-plus"> 添加文本</span></a></span>' +
+                        '<span><a href="javascript:void(0)" onclick="remove_html(this)"><span class="glyphicon glyphicon-minus"> 删除本栏</span></a></span>' +
+                    '</div>' +
+                '</div>'
+        $(obj).parent().parent().parent().after(html);
+    }
+    
+    function add_text(obj){
+        html =	'<div class="form-group clearfix">' +
+                    '<label class="form-title control-label">插入文本</label>' +
+                    '<textarea class="form-control article-form-control" rows="3" name="text"></textarea>' +
+                    '<div class="form-right text-right">' +
+                        '<span><a href="javascript:void(0)" onclick="add_pic(this)"><span class="glyphicon glyphicon-plus"> 添加图片</span></a></span>' +
+                        '<span><a href="javascript:void(0)" onclick="remove_html(this)"><span class="glyphicon glyphicon-minus"> 删除本栏</span></a></span>' +
+                    '</div>' +
+                '</div>'
+        $(obj).parent().parent().parent().after(html);
+    }
+    
+    function remove_html(obj){
+        $(obj).parent().parent().parent().remove();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,268 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html class="no-js">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>新闻资讯网</title>
+
+		<!-- Set render engine for 360 browser -->
+		<meta name="renderer" content="webkit">
+
+		<!-- No Baidu Siteapp-->
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+        
+		<link rel="icon" type="image/png" href="{% static 'myHTML/img/logo1.png' %}">
+
+		<!-- Add to homescreen for Chrome on Android -->
+		<meta name="mobile-web-app-capable" content="yes">
+		<link rel="icon" sizes="192x192" href="{% static 'myHTML/img/logo1.png' %}">
+
+		<!-- Add to homescreen for Safari on iOS -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-title" content="Amaze UI" />
+		<link rel="apple-touch-icon-precomposed" href="{% static 'myHTML/img/logo1.png' %}">
+
+		<!-- Tile icon for Win8 (144x144 + tile color) -->
+		<meta name="msapplication-TileImage" content="{% static 'myHTML/assets/i/app-icon72x72@2x.png' %}">
+		<meta name="msapplication-TileColor" content="#0e90d2">
+
+		<link rel="stylesheet" href="{% static 'myHTML/assets/css/amazeui.min.css' %}">
+		<link rel="stylesheet" href="{% static 'myHTML/assets/css/app.css' %}">
+
+		<style>
+			.am-header-mine {
+				margin: 0 30%;
+			}
+
+			
+			.am-nav>li+li {
+				margin-top: 0px;
+			}
+
+			.am-nav>li>a {
+				color: #ccc;
+				border-radius: 0;
+				padding-top: .5em;
+				padding-bottom: .5em;
+
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
+				border-top: 1px solid rgba(0, 0, 0, .3);
+			}
+
+			.am-nav>li>a:hover {
+				background: #404040;
+				color: #fff;
+			}
+
+			.am-nav>li.am-active>a {
+				background: #1a1a1a;
+				color: #fff;
+				box-shadow: inset 0 1px 3px rgba(0, 0, 0, .3);
+			}
+
+			.my-slide{
+				position: fixed;
+				bottom: 10px;
+				right: 10px;
+				z-index: 1000;
+				opacity: .5;
+				-webkit-transition: .2s;
+				transition: .2s;	
+			}
+
+			.my-slide:hover{
+				transform: rotate(720deg);
+				opacity: 1;
+			}
+
+			.my-top{
+				display: none;
+				position: fixed;
+				right: 10px;
+				bottom: 70px;
+
+				opacity: .5;
+				background-color: #eee;
+				color: #555;
+			}
+			.my-top:hover{
+				opacity: 1;
+			}
+
+			.am-active{
+				display: block;
+			}
+			.left-pic{
+				border-radius: 5%;
+			}
+			.wait{
+				text-align: center;
+			}
+			
+			.mid-title{
+				padding-bottom: 0;
+			}
+
+			@media only screen and (max-width: 640px){
+				.am-slider .am-slides img {
+					max-height: 220px;
+				}
+				.am-list-thumb img{
+					max-height: 80px;
+				}
+				.list-main-div{
+					height: 80px;
+				}
+				.author-div{
+					position: absolute;
+					bottom: 0;
+				}
+				.list-head-h3{
+					max-height: 46px;
+					overflow: hidden;
+				}
+
+				.my-title{
+					font-size: 95%;
+				}
+				
+
+				.pic-wrap {
+					position: relative;
+					z-index: 10;
+					overflow: hidden;
+					background-color: #fff;
+				}
+				.head_nav {
+					font-size: 14px;
+					display: -webkit-box;
+					display: -webkit-flex;
+					display: -ms-flexbox;
+					display: flex;
+					overflow-x: auto;
+					-webkit-overflow-scrolling: touch;
+					padding: 0px;
+				}
+				.head_nav>li {
+					-webkit-box-flex: 0;
+					-webkit-flex: none;
+					-ms-flex: none;
+					flex: none;
+					padding-top: 4px;
+				}
+				.head_nav a {
+					display: block;
+					position: relative;
+					line-height: 38px;
+					color: #222;
+				}
+				.head_nav>li.active a {
+					color: #35c584;
+				}
+				.pic-wrap-title{
+					margin-top: 5px;
+					font-weight: 400;
+					font-size: 1.4rem;
+					display: block;
+					word-wrap: normal;
+					text-overflow: ellipsis;
+					/* white-space: nowrap; */
+					overflow: hidden;
+					color: #555;
+					line-height: normal;
+					height: 38px;
+				}
+
+				.am-avg-sm-2>li{
+					width: 40%;
+				}
+				.am-gallery-default>li{
+					padding: 10px 0 ;
+					padding-right: 15px;
+				}
+				.hor-pic{
+					max-height: 100px;
+					margin-bottom: 5px;
+				}
+
+				.am-offcanvas-bar{
+					width: 160px;
+				}
+				
+			}
+		</style>
+		<!-- <style type="text/css"> -->
+        {% block up_style %}
+        {% endblock %}
+		<!-- </style> -->
+
+	</head>
+	<body>
+			
+		<!-- 侧边栏内容 -->
+		<section id="doc-oc-demo1" class="am-offcanvas">
+			<div class="am-offcanvas-bar">
+				<ul class="am-nav">
+					<li class="am-nav-header">新闻分类</li>
+					<li id="home"><a href="{% url 'mhome' %}">首页</a></li>
+					<li id="top"><a href="{% url 'mkind' 'top' %}">头条</a></li>
+					<li id="shehui"><a href="{% url 'mkind' 'shehui' %}">社会</a></li>
+					<li id="guonei"><a href="{% url 'mkind' 'guonei' %}">国内</a></li>
+					<li id="guoji"><a href="{% url 'mkind' 'guoji' %}">国际</a></li>
+					<li id="yule"><a href="{% url 'mkind' 'yule' %}">娱乐</a></li>
+					<li id="tiyu"><a href="{% url 'mkind' 'tiyu' %}">体育</a></li>
+					<li id="junshi"><a href="{% url 'mkind' 'junshi' %}">军事</a></li>
+					<li id="keji"><a href="{% url 'mkind' 'keji' %}">科技</a></li>
+					<li id="caijing"><a href="{% url 'mkind' 'caijing' %}">财经</a></li>
+					<li id="shishang"><a href="{% url 'mkind' 'shishang' %}">时尚</a></li>
+				</ul>
+			</div>
+		</section>
+		<header data-am-widget="header" class="am-header am-header-default" id="header">
+			<div class="am-header-left am-header-nav" id="header-left">
+				<a href="{% url 'mhome' %}" class="">
+					<i class="am-header-icon am-icon-home"></i>
+				</a>
+				{% block head %}{% endblock %}
+			</div>
+			<h1 class="am-header-title">
+				<img src="{% static 'myHTML/img/logo.png' %}" />
+			</h1>
+			<div class="am-header-right am-header-nav" id="head-right">
+				<!-- 链接触发器， href 属性为目标元素 ID -->
+				<a href="#doc-oc-demo1" data-am-offcanvas>
+					<i class="am-header-icon am-icon-bars"></i>
+				</a>
+			</div>
+		</header>
+        {% block main %}
+        {% endblock %}
+
+		<a href="" data-am-smooth-scroll title="回到顶部" class="am-icon-btn am-icon-arrow-up my-top" id="amz-go-top"></a>
+		<a href="#doc-oc-demo1" class="am-icon-btn am-icon-bars am-show-sm-only my-slide" data-am-offcanvas="">
+			<span class="am-sr-only">侧栏导航</span>
+		</a>	
+		<script src="{% static 'myHTML/js/jquery.min.js' %}"></script>
+		<script src="{% static 'myHTML/assets/js/amazeui.min.js' %}"></script>
+		<script src="{% static 'myHTML/assets/jsmain.js' %}"></script>
+	</body>
+</html>
+<script>
+	var win = $(window);
+	win.scroll(function(){
+		/*console.log(win.scrollTop())*/
+		if(win.scrollTop() > 420){
+			$("#amz-go-top").addClass('am-active');
+		}else{
+			$("#amz-go-top").removeClass('am-active');
+		}
+	});
+</script>
+
+{% block script %}
+{% endblock %}

@@ -1,0 +1,276 @@
+<!-- 登陆注册Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog login-modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">登陆新闻资讯网</h4>
+            </div>
+            <div class="modal-body">
+                <form id="login-form" class="hidden clearfix">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="用户名" name="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="密码" name="password">
+                    </div>
+
+                    <div class="form-group verifycode clearfix">
+                        <input type="text" class="form-control"  placeholder="验证码" name="verifycode">    
+                    </div>
+                    <img src="" class="code-image" onclick="renovate_verifycode(this)" id="login-code-img"/>
+                    <button type="submit" class="hidden"></button>
+                </form>
+                
+                <form id="register-form" class="hidden clearfix">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="用户名" name="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="密码" name="password">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="重复密码" name="repassword">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" placeholder="邮箱" name="email">
+                    </div>
+                    <div class="form-group verifycode">
+                        <input type="text" class="form-control" maxlength="4" placeholder="验证码" name="verifycode">  
+                    </div>
+                    <img src="" class="code-image"/ onclick="renovate_verifycode(this)" id="register-code-img"/>
+                    <button type="submit" class="hidden"></button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span class="no-acccount" id="modal-bottom"></span>
+                <!-- <span class="forget-pw" id="forget-pw"><a href="">忘记密码</a></span> -->
+                <button type="button" class="btn btn-primary" id="modal-button">登陆</button>
+                <div class="loading hidden" id="loading">
+                    <div class="pic">
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    validatorsInit();
+    function validatorsInit(){
+        $("#login-form").bootstrapValidator({
+            feedbackIcons: {//根据验证结果显示的各种图标
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields:{
+                username:{
+                    validators:{
+                        notEmpty:{
+                            message:'用户名不能为空'
+                        },
+                    
+                    }
+                },
+                password:{
+                    validators:{
+                        notEmpty:{
+                            message:'密码不能为空'
+                        },
+                    }
+                },
+                verifycode:{
+                    validators:{
+                        notEmpty:{
+                            message:'验证码不能为空'
+                        },
+                    }
+                }
+            },
+
+        }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            /**提交代码**/
+            req_login();
+        });
+
+        $("#register-form").bootstrapValidator({
+            feedbackIcons: {//根据验证结果显示的各种图标
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields:{
+                username:{
+                    validators:{
+                        notEmpty:{
+                            message:'用户名不能为空'
+                        },
+                    
+                    }
+                },
+                password:{
+                    validators:{
+                        notEmpty:{
+                            message:'密码不能为空'
+                        },
+                    }
+                },
+                repassword:{
+                    validators:{
+                        notEmpty:{
+                            message:'再次密码不能为空'
+                        },
+                    }
+                },
+                email:{
+                    message:'邮箱格式不正确',
+                    validators:{
+                        notEmpty:{
+                            message:'邮箱不能为空'
+                        },
+                    }
+                },
+                verifycode:{
+                    validators:{
+                        notEmpty:{
+                            message:'验证码不能为空'
+                        },
+                    }
+                }
+
+            }
+
+        }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            /**提交代码**/
+            req_register();
+        });
+    }
+
+    function renovate_verifycode(code_id){
+		$(code_id).attr("src", "{% url 'get_verifycode' %}" + '?num=' + Math.random())
+	}
+
+
+    function req_login(){
+        $("#modal-button").addClass('invisible');
+        $("#loading").removeClass('hidden');
+        var form = new FormData(document.getElementById("login-form"));
+        form.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+		$.ajax({ 
+            url: "{% url 'login' %}", 
+            type: "post",
+            processData: false,
+            contentType: false,
+            data: form,
+            success: function(data){
+                $("#modal-button").removeClass('invisible');
+                $("#loading").addClass('hidden');
+                if(data == "{{ SUCCESS }}"){
+                    alert('登陆成功');
+                    window.location.reload()
+                }else{
+                    switch(data)
+                    {
+                    case "{{ ERROR_PASSWORD }}":
+                        alert('账号或密码错误！');
+                        break;
+                    case "{{ ERROR_VERIFY_CODE }}":
+                        alert('验证码错误');
+                        break;
+                    default:
+                        break;
+                    }
+                    renovate_verifycode($("#login-code-img"))
+                }
+            }
+        });
+	}
+
+    function req_register(){
+        var form = new FormData(document.getElementById("register-form"));
+        form.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+		$.ajax({ 
+            url: "{% url 'register' %}", 
+            type: "post",
+            processData: false,
+            contentType: false,
+            data: form,
+            success: function(data){
+                if(data == "{{ SUCCESS }}"){
+                    alert('注册成功');
+                    window.location.reload()
+                }else{
+                    switch(data)
+                    {
+                    case "{{ USER_EXISTS }}":
+                        alert('用户名已存在');
+                        break;
+                    case "{{ DIFFERENT_PASSWORD }}":
+                        alert('两次密码不相同');
+                        break;
+                    case "{{ ERROR_VERIFY_CODE }}":
+                        alert('验证码错误');
+                        break;
+                    default:
+                        break;
+                    }
+                    renovate_verifycode($("#register-code-img"))
+                }
+                // window.location.reload()
+            }
+        });
+	}
+
+
+    function check_and_login(){
+        $("#login-form").submit();
+    }
+    function check_and_register(){
+        $("#register-form").submit();
+    }
+
+    function choose_register(){
+		$('input', '#register-form').each(function (index,element) {
+			element.value="";
+		});
+        $("#register-form").data('bootstrapValidator').destroy();
+        $('#register-form').data('bootstrapValidator', null);
+        validatorsInit();
+
+		$("#login-form").addClass("hidden");
+		$("#register-form").removeClass("hidden");
+		$("#forget-pw").addClass("hidden");
+		$("#modal-bottom").html("<a href=\"jacascript::void(0)\" onclick=\"choose_login()\">返回登陆</a>")
+		$("#myModalLabel").text("注册新闻资讯网");
+		$("#modal-button").text("注册");
+		$("#modal-button").attr("onclick","check_and_register();");
+        renovate_verifycode("#register-code-img");
+	}
+
+	function choose_login(){
+		$('input', '#login-form').each(function (index,element) {
+			element.value="";
+		});
+        $("#login-form").data('bootstrapValidator').destroy();
+        $('#login-form').data('bootstrapValidator', null);
+        validatorsInit();
+
+		$("#login-form").removeClass("hidden");
+		$("#forget-pw").removeClass("hidden");
+		$("#register-form").addClass("hidden");
+		$("#modal-bottom").html("还没有账号&nbsp;<a href=\"jacascript::void(0)\" onclick=\"choose_register()\">立即注册</a>")
+		$("#myModalLabel").text("登陆新闻资讯网");
+		$("#modal-button").text("登陆");
+		$("#modal-button").attr("onclick","check_and_login();");
+        renovate_verifycode("#login-code-img");
+	}
+
+</script>

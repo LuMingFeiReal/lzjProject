@@ -1,0 +1,130 @@
+{% extends 'components/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+新闻资讯-{{ cate_req.1 }}
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myHTML/css/kind-style.css' %}">
+{% endblock %}
+
+{% block content %}
+<script>
+	$("#{{ cate_req.0 }}").addClass("my-nav-active")
+</script>
+<ol class="my-layout my-breadcrumb  clearfix">
+	<li>当前位置：</li>
+	<li><a href="{% url 'home' %}">主页</a></li>
+	<li>&nbsp;>&nbsp;{{ cate_req.1 }}</li>
+</ol>
+
+<div class="my-layout clearfix">
+	<!-- 其他新闻列表 -->
+	<div class="my-layout-right">
+		{% for news_list in news_others %}
+			{% if forloop.first %}
+			<div class="small-title tabs-title clearfix">
+				<h2><a>24小时必读</a></h2>
+			</div>
+			{% else %}
+			<div class="small-title tabs-title clearfix">
+				<h2><a>热门资讯</a></h2>
+			</div>
+			{% endif %}
+			<ul class="tabs-news">
+				{% for news in news_list %}
+				<li class="one-tab clearfix">
+					<a class="pic-change" href="{% url 'detail' news.uniquekey %}"><img src="{{ news.thumbnail_pic }}" ></a>	
+					<div class="tab-img-title">
+						<a href="{% url 'detail' news.uniquekey %}">{{ news.title }}</a>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+		{% endfor %}
+	</div>
+
+	<!-- 类别新闻列表 -->
+	<div class="my-layout-left">
+		<div class="up-tabs clearfix">
+			<!-- 轮播图片 -->
+			<div id="carousel-example-generic" class="carousel slide up-tabs-pic1" data-ride="carousel">
+				<!-- Indicators -->
+				<ol class="carousel-indicators">
+					<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+					<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+					<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+				</ol>
+			
+				<!-- Wrapper for slides -->
+				<div class="carousel-inner" role="listbox">
+				{% for news in news_indicators %}
+					{% if forloop.first %}
+					<div class="item active">
+					{% else %}
+					<div class="item">
+					{% endif %}
+					<a href="{% url 'detail' news.uniquekey %}">
+						<img src="{{ news.thumbnail_pic }}" alt="...">
+						
+						<div class="carousel-caption">
+							<p>{{ news.title }}</p>
+						</div>
+					</a>
+					</div>
+				{% endfor %}
+				</div>
+				
+				<!-- Controls -->
+				<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+					<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					<span class="sr-only">Previous</span>
+				</a>
+				<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<span class="sr-only">Next</span>
+				</a>
+			</div><!--carousel slide-->
+			
+			{% for news in news_top %}
+				{% if forloop.first %}
+				<div class="up-tab-pic up-tabs-pic2 pic-change">
+				{% else %}
+				<div class="up-tab-pic up-tabs-pic3 pic-change">
+				{% endif %}
+					<a href="{% url 'detail' news.uniquekey %}">
+						<img src="{{ news.thumbnail_pic }}"/>
+						<p>{{ news.title }}</p>
+					</a>
+				</div>
+			{% endfor %}
+		</div>
+		
+		<!-- 这里往下kind列表 -->
+		{% for news in news_main %}
+		<div class="pic-and-text clearfix">
+			<a href="{% url 'detail' news.uniquekey %}" class="pic-change tl">
+				<img src="{{ news.thumbnail_pic }}" />
+			</a>
+			<div class="pic-text tl">
+				<a href="{% url 'detail' news.uniquekey %}">
+					<p>{{ news.title }}</p>
+				</a>
+				<span class="pic-span">{{ news.author_name }}</span>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}
+		
+{% block js %}	
+
+{% endblock %}
+		
+		
+		
+		
+		
+

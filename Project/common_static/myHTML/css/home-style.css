@@ -1,0 +1,295 @@
+body{
+	background-color: white;
+}
+
+/* 布局 */
+.home-col1{
+	margin-left: 40px;
+}
+.home-col2{
+	float: right;
+}
+.news-main{
+	margin-bottom: 30px;
+}
+.mid-pics-list{
+	margin-bottom: 30px;
+}
+.down-part{
+	margin-bottom: 30px;
+}
+
+
+/* 顶部 */
+.home-top{
+	height: 35px;
+    border-bottom: 1px solid #ebebeb;
+}
+.home-top-ul{
+	float: right;
+	margin-right: 20px;
+	
+}
+.home-top-ul>li{
+	float: left;
+}
+.home-top-ul li a{
+	display: block;
+	padding: 0 13px;
+	line-height: 35px;
+	font-size: 14px;
+}
+.home-top-ul li a:hover{
+	cursor: pointer;
+	background-color: #ebebeb;
+}
+.sp{
+	display: block;
+	height: 25px;
+	margin: 5px 10px;
+	border-left: 1px solid #ebebeb;
+}
+
+
+/* 搜索和logo */
+.home-header{
+	padding: 50px 0;
+	position: relative;
+}
+.search{
+	width: 400px;
+	margin: 0 auto;
+}
+.logo{
+	position: absolute;
+	top: 40px;
+	left: 40px;
+		
+	margin: 0 auto;
+}
+
+
+/* 导航 */
+.home-nav{
+	background-color: #1479d7;
+	height: 50px;
+	margin-bottom: 40px;
+
+	border-radius: 5px;
+}
+.home-nav-ul{
+	margin-left: 20px;
+}
+.home-nav-ul li{
+	float: left;
+	padding:0 15px;
+}
+.home-nav-ul a{
+	padding: 5px 5px;
+	
+	font-size: 18px;
+	color: white;
+	line-height: 50px;
+}
+.home-nav-ul a:hover{
+	color: #1479D7;
+	background-color: #C0C0C0;
+}
+
+
+
+/* 新闻列表 */
+.home-list{
+	line-height: 36px;
+    white-space: nowrap;
+}
+.home-list li{
+	font-size: 16px;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.home-list-bold{
+	font-size: 18px!important;
+    padding: 14px 0 7px;
+    font-weight: bold;
+}
+
+/* 标题间隙 */
+.small-title-down{
+	margin-bottom: 25px;
+}
+
+/* 列表中的图片 */
+.home-list-pic{
+	padding: 18px 0;
+}
+
+.good-news{
+	margin-top: 8px;
+}
+.bad-news{
+	margin-top: 6px
+}
+
+
+/* 天气预报 */
+.weather{
+	background: -webkit-linear-gradient(left, #0564dc , #238ffc); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(right, #0564dc, #238ffc); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(right, #0564dc, #238ffc); /* Firefox 3.6 - 15 */
+	background: linear-gradient(to right, #0564dc , #238ffc); /* 标准的语法 */
+	width: 100%;
+	color: white;
+	border-radius: 10px;
+	margin-bottom: 14px;
+}
+.location{
+	padding-top: 20px;
+	
+	margin-left: 40px;
+}
+.temperature{
+	margin-left: 30px;
+}
+.weather-value{
+	display: inline-block;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	margin-left: 40px;
+	padding: 5px 20px;
+	background: linear-gradient(to right, #0504dc , #238ffc);
+	border-radius:25px;
+	line-height: 35px;
+}
+.weather-v{
+	margin-left: 10px;
+}
+.temperature img{
+	float: left;
+	margin-top: 40px;
+	margin-left: 10px;
+	width: 50px;
+	height: 50px;
+}
+.temperature span{
+	float: left;
+}
+.temperature-n{
+	font-size: 70px;		
+}
+.temperature-t{
+	font-size: 20px;
+	margin-top: 15px;
+}
+.weather-info{
+	font-size: 20px;
+	margin-top: 55px;
+	margin-left: 15px;
+}
+.weather-update-time{
+	margin-top: 65px;
+	margin-left: 20px;
+}
+.dampness-wind{
+	margin-left: 45px;
+	padding-bottom: 20px;
+}
+.dampness{
+	margin-left: 8px;
+	margin-right: 50px;
+}
+.wind{
+	margin-left: 8px;
+}
+
+.location,.dampness-wind{
+	font-size: 18px;
+}
+
+/* 轮播图下间隙 */
+.item img{
+	height: 245px!important;
+	width: 440px!important;
+}
+.carousel{
+	margin-bottom: 22px;
+}
+.home-list-up{
+	margin-top: 8px;
+}
+
+
+/* 中间横图 */
+.my-pic-one{
+	width: 225px;
+	float: left;
+	margin: 0 5px;
+}
+.my-pic-one:first-child{
+	margin-left: 0;
+}
+.my-pic-one:last-child{
+	margin-right: 0;
+}
+.my-pics p{
+	font-size: 14px;
+	height: 44px;
+	overflow: hidden;
+}
+.under-carousel-text{
+	margin-top: 20px;
+}
+.thumbnail{
+	margin-bottom: 0;
+}
+.thumbnail>img{
+	height: 160px;
+	border-radius: 5px;
+}
+
+
+
+/* 下半部分 */
+.bdwrap{
+	margin-bottom: 15px;
+}
+.bdwrap-con{
+	width: 440px;
+	float: left;
+}
+.bdright{
+	float: right;
+}
+.bdright h2{
+	font-size: 22px;
+    height: 70px;
+	overflow: hidden;
+}
+.bdwrap ul{
+	margin-top: 20px;
+}
+.line{
+	border-top: 2px solid #0276DA;
+    width: 38px;
+    height: 0;
+    margin: 13px 0;
+}
+
+
+/* 推荐部分 */
+.recommend{
+	border-left: 1px solid #cae0f3;
+	padding-left: 20px;
+}
+.recommend-list{
+	margin-top: 6px;
+	margin-bottom: 15px;
+}
+.under-recommend-list{
+	margin-bottom: 15px;
+	margin-top: 20px;
+}
+.recommend-pic-text{
+	width: 190px;
+}

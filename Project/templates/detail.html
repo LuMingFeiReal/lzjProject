@@ -1,0 +1,129 @@
+{% extends 'components/base.html' %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myHTML/css/detail-style.css' %}">
+{% endblock %}
+
+{% block content %}
+<ol class="my-layout my-breadcrumb  clearfix">
+	<li>当前位置：</li>
+	<li><a href="{% url 'home' %}">主页</a></li>
+	<li>&nbsp;>&nbsp;</li>
+	{% if type %}
+	<li><a href="{% url 'wall' %}">曝光墙</a></li>
+	{% else %}
+	<li><a href="{% url 'kind' main.category.category_py %}">{{ main.category.category_ch }}</a></li>
+	{% endif %}
+	<li>&nbsp;>&nbsp;正文</li>
+</ol>
+
+<div class="my-layout clearfix">
+	<div class="my-layout-left">
+		<!-- 这里是新闻主体 -->
+		{% if type %}
+		<div class="user-article">
+			<h1 class="article-title">{{ main.title }}</h1>
+
+			<div class="under-h1 clearfix">
+				<span>{{ main.create_date }}</span>
+				<span>作者：{{ main.user_key.newsuser.nickname }}</span>
+				{% if request.user.is_authenticated %}
+					<a href="{% url 'addpage' %}" class="btn btn-default">发表文章</a>
+					{% if main.user_key == request.user %}
+					<a href="javascript:remove_a()" class="btn btn-default">删除文章</a>
+					{% endif %}
+				{% endif %}
+			</div>
+			{{ main.html|safe }}
+		</div>
+		<script>
+			$("#bgq").addClass("my-nav-active");
+			$("title").html($(".article-title").text())
+			var key = {"uniquekey":"{{ main.uniquekey }}"}
+			function remove_a() {
+				if(confirm('确定删除？')){
+					$.ajax({
+						type: "GET",
+						url: '{% url "remove_article" %}',
+						data: key,
+						success: function (data) {
+							alert('删除成功！');
+							$(location).attr('href', '{% url "wall" %}');
+						},
+						error: function () {
+							alert("Sorry, The requested property could not be found.");
+						}
+					});
+				}	
+			}
+		</script>
+		{% else %}
+		<div id="news">
+						
+		</div>
+		<script>
+			$(function () {
+				$("#{{ main.category.category_py }}").addClass("my-nav-active")
+				$.ajax({
+					type: "GET",
+					url: 'http://mini.eastday.com/mobile/{{ main.url_num }}.html',
+					dataType: "html",
+					success: function (data) {
+						//alert(data); // shows whole dom
+						//alert( $(data).find('#test').html() ); // returns null
+						
+						var c = data.match(/<article[\s]+[\d\D]*<\/article>/)
+						console.log(c)
+						$("#news").html(c);
+						$("title").html($(".article-title").text())
+					},
+					error: function () {
+						alert("Sorry, The requested property could not be found.");
+					}
+				});
+			});
+		</script>
+		{% endif %}
+		<!-- 评论区域 -->
+		{% include 'components/comment.html' %}
+	</div>
+	
+	<div class="my-layout-right">
+		<div class="small-title tabs-title clearfix">
+			<h2><a href="">相关文章</a></h2>
+		</div>
+		<ul class="tabs-news">
+			{% for news in related_news %}
+			<li class="one-tab-2">
+				<a class="pic-change" href="{% url 'detail' news.uniquekey %}">
+					<img src="{{ news.thumbnail_pic }}" >
+				</a>	
+				<div class="tab-img-title-2">
+					<a href="{% url 'detail' news.uniquekey %}">{{ news.title }}</a>
+				</div>
+			</li>
+			{% endfor %}
+		</ul>	
+	</div>
+
+
+</div>
+
+<div class="share">
+	<a href="" class="share-icon"></a>
+	<a href="" class="share-icon share-sina"></a>
+	<a href="" class="share-icon share-qzone"></a>
+	<a href="" class="share-icon share-tudou"></a>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+		
+		
+		
+		

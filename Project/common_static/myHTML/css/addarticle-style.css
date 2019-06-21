@@ -1,0 +1,73 @@
+h2{
+    margin: 10px 5px;
+    margin-bottom: 50px;
+    padding: 5px 5px;
+    color: blueviolet;
+    border-bottom: solid 1px black;
+}
+
+#article{
+    margin: 10px 15px;
+}
+.checkbox, .radio{
+    margin-top: 0px
+}
+.form-title{
+    width: 100px;
+    float: left;
+}
+.input-title{
+    width: 200px
+}
+
+.show-pic {
+    float: left;
+    width: 600px;
+    height: 250px;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.show-pic img {
+    display: block;
+    max-height: 200px;
+    max-width: 580px;
+    margin: auto;
+}
+.form-right{
+    float: right;
+    width: 265px;
+}
+.form-right span{
+    font-size: 16px;
+    display: block;
+}
+.text-right{
+    text-align: left;
+    
+}
+.text-right>span{
+    margin-top: 10px;
+}
+
+.pic-right>span{
+    margin-top: 30px;
+}
+.upload-pic {
+    margin-top: 30px;
+    width: 265px;
+}
+.article-form-control{
+    float: left;
+    width: 600px;
+
+    resize: vertical;
+}
+
+.upload-btn{
+    float: right;
+    margin-top: 100px;
+    margin-right: 200px;
+    margin-bottom: 100px;
+}

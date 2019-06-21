@@ -1,0 +1,134 @@
+{% load staticfiles %}
+<div class="comment">
+    <div class="comment-tit"><span class="comment-c">评论(<span id="comment_count">{{ comments|length }}</span>)</span></div>
+    <div class="comment-write clearfix">
+        <div class="clearfix">
+            <div class="left-head">
+                <img src="{% static 'myHTML/img/1.jpg' %}"  class="round_icon">	
+            </div>
+            <div class="right-content">
+                {% if user.is_authenticated %}
+                <textarea class="write-area" onkeyup="wordCount(this); id='comment_content'"></textarea>
+                {% else %}
+                <textarea class="write-area" onkeyup="wordCount(this);" disabled="disabled"></textarea>
+                <!-- 未登录状态 -->
+                <!-- textarea加上disabled="disabled" -->
+                <span class="no-login">请先<a href="javascript:$('#myModal').modal()" onclick="choose_login()">登陆</a></span>
+                {% endif %}
+            </div>
+		</div>
+		{% if user.is_authenticated %}
+		<button type="button" class="btn btn-info comment-sub" onclick="add_comment()">发表</button>
+		<span class="word-num">已输入<span id="wordnum">0</span>字</span>
+		{% else %}
+		<button type="button" class="btn btn-info comment-sub" onclick="" disabled="disabled">发表</button>
+		{% endif %}
+    </div>
+    <div class="user-comment">
+        <h3>热门评论</h3>
+        <ul class="comment-ul" id="comment">
+			{% for comment in comments %}
+			<li class="clearfix">
+				<div class="left-head">
+					<img src="{% static 'myHTML/img/1.jpg' %}" class="round_icon">
+				</div>
+				<div class="right-content">
+					<div class="comment-top">
+						<span class="comment-name">{{ comment.user_key.newsuser.nickname }}</span>
+						<span class="comment-time">{{ comment.date }}</span>
+						<a href="" class="news-zan news-zan-finish">22</a>
+					</div>
+					<div class="comment-content">
+						<p>{{ comment.content }}</p>
+					</div>
+				</div>
+			</li>
+			{% endfor %}
+		</ul>
+        <p class="no-more">没有更多了</p>
+    </div>
+</div>
+
+<script>
+	// 统计输入的字数
+	function wordCount(input) {
+        // 获取要显示已经输入字数文本框对象
+        var content = document.getElementById('wordnum');
+        if (content && input) {
+            // 获取输入框输入内容长度并更新到界面
+            var value = input.value;
+            // 将换行符不计算为单词数
+            value = value.replace(/\n|\r/gi,"");
+            // 更新计数
+            content .innerText = value.length;
+        }
+    }
+
+	// 获取日期时间
+	function get_date() {
+		var mydate = new Date();
+		hour = mydate.getHours();
+		min = mydate.getMinutes();
+		sec = mydate.getSeconds();
+		if(hour < 10){
+			hour = '0' + hour;
+		}
+		if(min < 10){
+			min = '0' + min;
+		}
+		if(sec < 10){
+			sec = '0' + sec;
+		}
+		var str = "" + mydate.getFullYear() + "-";
+		str += (mydate.getMonth() + 1) + "-";
+		str += mydate.getDate() + " ";
+		str += hour + ":";
+		str += min + ":";
+		str += sec;
+		return str;
+	}
+	
+	// 获取随机字符串
+	function get_key(len){
+		len = len || 1;
+		var $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1230456789';
+		var maxPos = $chars.length;
+		var str = '';
+		for (i = 0; i < len; i++) {
+			str += $chars.charAt(Math.floor(Math.random() * maxPos));
+		}
+		return str;
+    }
+
+	function add_comment(){
+		var username = '{{ user.username }}';
+		var content = $('#comment_content').val();
+		var date = get_date();
+	
+		var x = {
+			
+		};
+		
+		data = {
+			'uniquekey':'{{ main.uniquekey }}',
+			'flag': '{{ main.category }}',
+			'content': content,
+			'date': date,
+			'csrfmiddlewaretoken': '{{ csrf_token }}'
+		};
+		
+		$.ajax({
+			type: "POST",
+			url: "{% url 'add_comment' %}",
+			data: data,
+			success: function (message) {
+				alert("评论成功！");
+				window.location.reload();
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				alert(XMLHttpRequest);
+			}
+    	});
+	}
+
+</script>

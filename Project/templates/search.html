@@ -1,0 +1,62 @@
+{% extends 'components/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+新闻资讯-搜索结果
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myHTML/css/search-style.css' %}">
+{% endblock %}
+
+{% block content %}
+<ol class="my-layout my-breadcrumb  clearfix">
+	<li>当前位置：</li>
+	<li><a href="{% url 'home' %}">主页</a></li>
+	<li>&nbsp;>&nbsp;搜索结果</li>
+</ol>
+
+<div class="my-layout clearfix">
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">搜索结果</div>
+        <div class="panel-body">
+            <p>共搜索到{{ count }}条数据</p>
+        </div>
+        <!-- Table -->
+        <table class="table table-striped" id="result">
+            <thead>
+                <th>#</th>
+                <th>标题</th>
+                <th>作者</th>
+                <th>日期</th>
+            </thead>
+
+            <tbody>
+            {% for one in result %}
+            <tr>
+                <th>{{ forloop.counter }}</th>
+                <td ><a href="{% url 'detail' one.uniquekey %}" class="result-title">{{ one.title }}</a></td>
+                <td>{{ one.author_name }}</td>
+                <td>{{ one.date }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td>暂无任何数据</td>
+            </tr>
+            {% endfor %}
+             
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $('.result-title').each(function(index,item){
+            d = $(this).text().replace('{{ keyword }}','<span style="color:blue;">{{ keyword }}</span>')
+            $(this).html(d);
+        });
+</script>
+{% endblock %}

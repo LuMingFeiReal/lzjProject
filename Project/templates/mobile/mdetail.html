@@ -1,0 +1,231 @@
+{% extends 'mobile/mbase.html' %}
+{% load staticfiles %}
+
+{% block up_style %}
+<style>
+    .J-article{
+        padding: 20px;
+        font-size: 18px;
+        padding-bottom: 0;
+    }
+    .article-content .txt {
+        word-wrap: break-word;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .article-content .section {
+        line-height: 28px;
+        margin-top: 20px;
+    }
+
+    #title {
+        text-align: justify;
+        border-bottom: 1px solid #e5e5e5;
+        font-size: 20px;
+    }
+
+    .article-src-time {
+        font-size: 12px;
+        color: #999;
+        padding-bottom: 10px;
+    }
+    .img-wrap{
+        display: block;
+        padding-bottom: 0!important;
+    }
+
+    .comment-title{
+        text-align: center;
+        font-size: 1.6rem;
+        padding-top: 0;
+        padding-bottom: 5px;
+        margin: 0;
+        margin-bottom: 8px;
+        height: 2rem;
+        line-height: 2rem;
+        font-weight: bold;
+        border-bottom: 1px #dedede solid;
+    }
+    .mysplit{
+        border-bottom: 10px  rgb(240, 248, 255) solid;
+    }
+    .com-one{
+        margin-bottom: 5px;
+    }
+    .first-li{
+        border-top: none!important;
+    }
+    @media only screen and (max-width: 640px){
+        .am-gallery-default>li{
+            padding: 5px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<div id="news">
+    
+</div>
+
+<p class="mysplit"></p>
+
+<div data-am-widget="list_news" class="am-list-news am-list-news-default" >
+    <!--列表标题-->
+
+    <p class="comment-title">热门评论</p>
+    <p style="text-align: center;">暂无评论</p>
+
+    <article class="am-comment">
+        <div class="com-one">
+            <a href="#link-to-user-home">
+                <img src="{% static 'myHTML/img/1.jpg' %}" alt="" class="am-comment-avatar" width="48" height="48"/>
+            </a>
+            
+            <div class="am-comment-main">
+                <header class="am-comment-hd">
+                <!--<h3 class="am-comment-title">评论标题</h3>-->
+                <div class="am-comment-meta">
+                    <a href="#link-to-user" class="am-comment-author">某人</a>
+                    评论于 <time datetime="2013-07-27T04:54:29-07:00" title="2013年7月27日 下午7:54 格林尼治标准时间+0800">2014-7-12 15:30</time>
+                </div>
+                </header>
+            
+                <div class="am-comment-bd">
+                很不错
+                </div>
+            </div>
+        </div>
+        <div class="com-one">
+            <a href="#link-to-user-home">
+                <img src="{% static 'myHTML/img/1.jpg' %}" alt="" class="am-comment-avatar" width="48" height="48"/>
+            </a>
+            
+            <div class="am-comment-main">
+                <header class="am-comment-hd">
+                <!--<h3 class="am-comment-title">评论标题</h3>-->
+                <div class="am-comment-meta">
+                    <a href="#link-to-user" class="am-comment-author">某人</a>
+                    评论于 <time datetime="2013-07-27T04:54:29-07:00" title="2013年7月27日 下午7:54 格林尼治标准时间+0800">2014-7-12 15:30</time>
+                </div>
+                </header>
+            
+                <div class="am-comment-bd">
+                很不错
+                </div>
+            </div>
+        </div>
+    </article>
+</div>
+
+<p class="mysplit"></p>
+
+<div data-am-widget="list_news" class="am-list-news am-list-news-default" >
+        <!-- 更多在底部
+    <div class="am-list-news-ft">
+        <a class="am-list-news-more am-btn am-btn-default " href="###">查看更多 &raquo;</a>
+    </div> -->
+    <div class="am-list-news-bd">
+        <ul id="news-body" class="am-list">
+            <li class="first-li">
+                <ul data-am-widget="gallery" class="am-gallery am-avg-sm-3
+                am-avg-md-3 am-avg-lg-4 am-gallery-default" data-am-gallery="{ pureview: true }" >
+                    {% for one in bottom_top %}
+                    <li>
+                        <div class="am-gallery-item">
+                            <a href="{% url 'mdetail' one.uniquekey %}" class="">
+                                <img src="{{ one.thumbnail_pic }}"  alt="{{ one.title }}"/>
+                                <h3 class="am-gallery-title">{{ one.title }}</h3>
+                                <div class="am-gallery-desc">{{ one.author_name }}</div>
+                            </a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <p class="wait" id="loading"><span class="am-icon-cog am-animation-spin"></span>&nbsp;加载中.请稍等.</p>
+	<p class="wait" id="no-more" style="display: none;"><span class="am-icon-info-circle"></span>&nbsp;没有更多了</p>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+    $('#{{ main.category.category_py }}').addClass('am-active');
+    var html1 = '<div class="am-header-left am-header-nav">'+
+        '<a href="javascript:history.go(-1);" class="">'+
+        '<img class="am-header-icon-custom"'+
+        'src="'+'{% static "myHTML/assets/back.svg" %}'+'" alt=""/></a></div>';
+    $('#header-left').hide();
+    $('#header').prepend(html1);
+
+    $(function () {
+        // $("#{{ main.category.category_py }}").addClass("my-nav-active")
+        $.ajax({
+            type: "GET",
+            url: 'http://mini.eastday.com/mobile/{{ main.url_num }}.html',
+            dataType: "html",
+            success: function (data) {
+                //alert(data); // shows whole dom
+                //alert( $(data).find('#test').html() ); // returns null
+                
+                var c = data.match(/<article[\s]+[\d\D]*<\/article>/);
+                console.log(c)
+                $("#news").html(c);
+                $("title").html($(".article-title").text())
+            },
+            error: function () {
+                alert("Sorry, The requested property could not be found.");
+            }
+        });
+    });
+
+
+    var pagenum = 0;
+	var bottomflag = true;
+	var detailurl = '{% url "mdetail" "xxx" %}'
+	function add_news(){
+		data = {}
+        data['pagenum'] = pagenum
+        data['cate'] = '{{ main.category.category_py }}'
+		$.ajax({
+			type: "get",
+			url: "{% url 'getkindnews' %}",
+			data: data,
+			dataType: "json",
+			success: function (data) {
+				if(data['news_ul'].length){
+					data['news_ul'].forEach(function(item){
+						item['url'] =  detailurl.replace('xxx', item['url']);
+						$('#news-body').append(add_pic_right(item));
+					});
+					bottomflag = true;
+				}else{
+					$('#no-more').show();
+					$('#loading').hide();
+				}
+			},
+			error:function(xhr,state,errorThrown){
+				$('#no-more').show();
+				$('#loading').hide();
+			}
+		});
+	}
+
+	add_news();
+	$(window).scroll(function(){
+		// scroll at bottom
+		if (bottomflag && $(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+			bottomflag = false;
+			pagenum = pagenum + 1;
+			setTimeout(function(){
+				add_news();
+			},2000);
+		}
+    });
+
+</script>
+{% endblock %}

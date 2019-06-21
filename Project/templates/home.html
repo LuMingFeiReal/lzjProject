@@ -1,0 +1,419 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>新闻资讯网</title>
+		<!-- 网页图标 -->
+		<link rel="icon" href="{% static 'myHTML/img/logo1.png' %}" type="image/x-icon" />
+		<!-- 引入bootstrap -->
+		<link rel="stylesheet" type="text/css" href="{% static 'myHTML/css/bootstrap.min.css' %}">
+		<!-- 引入基样式 -->
+		<link rel="stylesheet" type="text/css" href="{% static 'myHTML/css/base.css' %}">
+		<!-- home样式 -->
+		<link rel="stylesheet" type="text/css" href="{% static 'myHTML/css/home-style.css' %}" >
+		<!-- 引入bootstrap表单验证 -->
+        <link rel="stylesheet" type="text/css" href="{% static 'myHTML/css/bootstrapValidator.css' %}">
+
+		<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+		<script src="{% static 'myHTML/js/jquery.min.js' %}"></script>
+		<script src="{% static 'myHTML/js/bootstrapValidator.min.js' %}"></script>
+		<script>
+			function IsMobile() {
+				var isMobile = {
+					Android: function () {
+						return navigator.userAgent.match(/Android/i) ? true : false;
+					},
+					BlackBerry: function () {
+						return navigator.userAgent.match(/BlackBerry/i) ? true : false;
+					},
+					iOS: function () {
+						return navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false;
+					},
+					Windows: function () {
+						return navigator.userAgent.match(/IEMobile/i) ? true : false;
+					},
+					any: function () {
+						return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
+					}
+				};
+		
+				return isMobile.any(); //是移动设备
+			}
+			if(IsMobile()){
+				window.location.replace("{% url 'mhome' %}");
+			}
+		</script>
+	</head>
+	<body>
+		
+		{% include 'components/login_modal.html' %}
+
+		<!-- 首页最高 -->
+		<div class="home-top">
+			<ul class="home-top-ul">
+				<li><a href="">设为首页</a></li>
+				<li><a href="">网站地图</a></li>
+				<li><a href="">English</a></li>
+				<li class="sp"></li>
+
+				{% if user.is_authenticated %}
+				<li>
+					<div class="dropdown">
+						<a id="dLabel" data-target="#" href="javascript::void(0);" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							{{ user.newsuser.nickname }} 你好！
+							<span class="caret"></span>
+						</a>
+					
+						<ul class="dropdown-menu" aria-labelledby="dLabel">
+							<li><a href="{% url 'personal' %}">个人中心</a></li>
+							<li><a href="{% url 'logout' %}">退出登录</a></li>
+						</ul>
+					</div>
+				</li>
+				{% else %}
+				<li><a type="button" data-toggle="modal" data-target="#myModal"  data-backdrop="static" onclick="choose_login()">登陆</a></li>
+				<li><a type="button" data-toggle="modal" data-target="#myModal"  data-backdrop="static" onclick="choose_register()">注册</a></li>
+				{% endif %}
+			</ul>
+		</div>
+		
+		<!-- 搜索框和logo -->
+		<header class="home-layout home-header">	
+			<div class="logo clearfix">
+				<img src="{% static 'myHTML/img/logo1.png' %}" >
+				<span>新闻资讯</span>
+			</div>
+			<form class="input-group search" action="{% url 'search' %}" method="get">			
+				<input type="text" class="form-control" placeholder="Search for..." name='keyword'>
+				<span class="input-group-btn">
+					<button class="btn btn-default" onclick="search_news()" type="button">搜索一下</button>
+				</span>
+			</form><!-- /input-group -->		
+		</header>
+		
+		<!-- 导航 -->
+		<nav class="home-layout home-nav">
+			<ul class="home-nav-ul">
+				<li><a href="{% url 'home' %}">首页</a></li>
+				<li><a href="{% url 'kind' 'top' %}">头条</a></li>
+				<li><a href="{% url 'kind' 'shehui' %}">社会</a></li>
+				<li><a href="{% url 'kind' 'guonei' %}">国内</a></li>
+				<li><a href="{% url 'kind' 'guoji' %}">国际</a></li>
+				<li><a href="{% url 'kind' 'yule' %}">娱乐</a></li>
+				<li><a href="{% url 'kind' 'tiyu' %}">体育</a></li>
+				<li><a href="{% url 'kind' 'junshi' %}">军事</a></li>
+				<li><a href="{% url 'kind' 'keji' %}">科技</a></li>
+				<li><a href="{% url 'kind' 'caijing' %}">财经</a></li>
+				<li><a href="{% url 'kind' 'shishang' %}">时尚</a></li>
+				<li><a href="{% url 'wall' %}">曝光墙</a></li>
+			</ul>
+		</nav>
+		
+		<!-- 新闻列表内容 -->
+		<div class="home-layout">
+			<div class="news-main clearfix">
+				<!-- 主页上左 -->
+				<div class="home-col clearfix">
+					<div class="small-title small-title-1 clearfix">
+						<h2><a href="">要闻</a></h2>
+					</div>
+					<ul class="home-list">
+						{% for news in news_yaowen %}
+							{% if forloop.first %}
+							<li class="home-list-bold"><a href="{% url 'detail' news.uniquekey %}" target="_blank">{{ news.title }}</a></li>
+							{% elif forloop.counter == 8 or forloop.counter == 15 %}
+							<li class="home-list-pic">
+								<div class="pic-and-text clearfix">
+									<a href="{% url 'detail' news.uniquekey %}" class="pic-change tl" target="_blank"><img src="{{ news.thumbnail_pic }}"/></a>
+									<div class="pic-text tl">
+										<a href="{% url 'detail' news.uniquekey %}">
+											<p>{{ news.title }}</p>
+										</a>
+										<span class="pic-span">{{ news.author_name }}</span>
+									</div>
+								</div>
+							</li>
+							{% else %}
+							<li><a href="{% url 'detail' news.uniquekey %}" target="_blank">{{ news.title }}</a></li>
+							{% endif %}
+						{% endfor %}
+					</ul>
+				</div>
+				
+				
+				<!-- 主页上中 -->
+				<div class="home-col home-col1">
+					<div class="small-title small-title-1 clearfix">
+						<h2><a href="">头条</a></h2>
+					</div>
+					
+					<ul class="home-list">
+						{% for news in news_top %}
+							{% if forloop.first %}
+							<li class="home-list-bold"><a href="{% url 'detail' news.uniquekey %}">{{ news.title }}</a></li>
+							{% elif forloop.counter == 6 %}
+							<li class="home-list-pic">
+								<div class="pic-and-text clearfix">
+									<a href="{% url 'detail' news.uniquekey %}" class="pic-change tl" target="_blank"><img src="{{ news.thumbnail_pic }}"/></a>
+									<div class="pic-text tl">
+										<a href="{% url 'detail' news.uniquekey %}" target="_blank">
+											<p>{{ news.title }}</p>
+										</a>
+										<span class="pic-span">{{ news.author_name }}</span>
+									</div>
+								</div>
+							</li>
+							{% else %}
+							<li><a href="{% url 'detail' news.uniquekey %}" target="_blank">{{ news.title }}</a></li>
+							{% endif %}
+						{% endfor %}
+					</ul>
+					
+					
+					
+					<div class="small-title small-title-2 clearfix">
+						<h2 class=""><a href="">时尚</a></h2>
+					</div>
+					<ul class="home-list">
+						{% for article in red %}
+						{% if forloop.first %}
+						<li class="home-list-pic">
+							<div class="pic-and-text clearfix">
+								<a href="{% url 'detail' article.uniquekey %}" class="pic-change tl" target="_blank"><img src="{{ article.pic }}"/></a>
+								<div class="pic-text tl">
+									<a href="{% url 'detail' article.uniquekey %}" target="_blank">
+										<p>{{ article.title }}</p>
+									</a>
+									<span class="pic-span">{{ article.user_key.newsuser.nickname }}</span>
+								</div>
+							</div>
+						</li>
+						{% else %}
+						<li><a href="{% url 'detail' article.uniquekey %}">{{ article.title }}</a></li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+				</div>
+				
+				<!-- 主页上右 -->
+				<div class="home-col home-col2">
+					<div class="weather">
+						<div class="location">
+							<span class="glyphicon glyphicon-map-marker weather-icon"></span>
+							<span>{{ weather.city }}，{{ weather.province }}，{{ weather.country }}</span>
+						</div>
+						
+						<div class="weather-value">
+							<span class="glyphicon glyphicon-leaf"></span>
+							<span class="weather-v">{{ weather.aqi }} {{ weather.quality }}</span>
+						</div>
+						
+						<div class="temperature clearfix">
+							<span class="temperature-n">{{ weather.temperature }}</span><span class="temperature-t">°</span>
+							<img src="{{ weather.pic }}" >
+							<span class="weather-info">{{ weather.wea }}</span>
+							<span class="weather-update-time">今天{{ weather.time }}更新</span>
+						</div>
+						
+						<div class="dampness-wind">
+							<span class="glyphicon glyphicon-tint"></span>
+							<span class="dampness">湿度{{ weather.dampness }}</span>
+							
+							<span class="glyphicon glyphicon-flag"></span>
+							<span class="wind">{{ weather.windd }}{{ weather.windp }}</span>
+						</div>
+					</div>
+					
+					<div class="small-title small-title-1 small-title-down clearfix">
+						<h2><a href="{% url 'kind' 'tiyu' %}">体育</a></h2>
+					</div>
+					<!-- 轮播图片 -->
+					<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+						<!-- Indicators -->
+						<ol class="carousel-indicators">
+							<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+							<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+							<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+						</ol>
+					
+						<!-- Wrapper for slides -->
+						<div class="carousel-inner" role="listbox">
+						{% for news in news_tiyu %}
+							{% if forloop.first %}
+							<div class="item active">
+							{% else %}
+							<div class="item">
+							{% endif %}
+								<a href="{% url 'detail' news.uniquekey %}">
+									<img src="{{ news.thumbnail_pic }}" alt="...">
+								</a>
+							</div>
+						{% endfor %}
+						</div>
+						
+						<!-- Controls -->
+						<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+							<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+							<span class="sr-only">Previous</span>
+						</a>
+						<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+							<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+							<span class="sr-only">Next</span>
+						</a>
+					</div><!--carousel slide-->
+					
+					<ul class="home-list">
+						{% for news in news_tiyu %}
+						<li><a href="{% url 'detail' news.uniquekey %}">{{ news.title }}</a></li>	
+						{% endfor %}	
+					</ul>
+					
+					<div class="small-title small-title-2 bad-news clearfix">
+						<h2 class=""><a href="">黑名单</a></h2>
+					</div>
+					
+					<ul class="home-list home-list-up">
+						{% for article in black %}
+						<li><a href="{% url 'detail' article.uniquekey %}" target="_blank">{{ article.title }}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+			
+			<!-- 中间的一排图片 -->
+			<div class="mid-pics-list">
+				<div class="small-title small-title-1 small-title-down clearfix">
+					<h2><a href="">视觉焦点</a></h2>
+				</div>
+				<div class="my-pics clearfix">
+					
+					{% for news in news_other.news_pic %}
+					<div class="my-pic-one">
+						<a href="{% url 'detail' news.uniquekey %}"  target="_blank">
+							<div class="thumbnail">
+								<img src="{{ news.thumbnail_pic }}" alt="...">
+								<div class="caption">
+									<p>{{ news.title }}</p>
+								</div>
+							</div>
+						</a>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+			
+			<!-- 下半部分 -->
+			<div class="down-part clearfix">
+				<div class="home-col-two">
+					<!-- 各类新闻展示 -->
+					{% for news_list in news_down %}
+					<div class="bdwrap clearfix">
+						<div class="small-title small-title-1 small-title-down clearfix">
+							<h2><a href="{% url 'kind' news_list.0.category.category_py %}" target="_blank">{{ news_list.0.category.category_ch }}</a></h2>
+						</div>
+
+						<div class="bdwrap-con">
+							<div class="pic-and-text clearfix">
+								<a href="{% url 'detail' news_list.0.uniquekey %}"  target="_blank" class="pic-change tl"><img src="{{ news_list.0.thumbnail_pic }}" /></a>
+								<div class="pic-text tl">
+									<a href="{% url 'detail' news_list.0.uniquekey %}" target="_blank">
+										<p>{{ news_list.0.title }}</p>
+									</a>
+									<span class="pic-span">{{ news_list.0.author_name }}</span>
+								</div>
+							</div>
+							<ul class="home-list">
+								<li><a href="{% url 'detail' news_list.1.uniquekey %}" target="_blank">{{ news_list.1.title }}</a></li>
+								<li><a href="{% url 'detail' news_list.2.uniquekey %}" target="_blank">{{ news_list.2.title }}</a></li>
+								<li><a href="{% url 'detail' news_list.3.uniquekey %}" target="_blank">{{ news_list.3.title }}</a></li>			
+							</ul>
+						</div>
+						<div class="bdwrap-con bdright">
+							<a href="{% url 'detail' news_list.4.uniquekey %}"  target="_blank">
+								<h2>{{ news_list.4.title }}</h2>
+							</a>
+							<div class="line"></div>
+							<ul class="home-list">
+								<li><a href="{% url 'detail' news_list.5.uniquekey %}" target="_blank">{{ news_list.5.title }}</a></li>
+								<li><a href="{% url 'detail' news_list.6.uniquekey %}" target="_blank">{{ news_list.6.title }}</a></li>
+								<li><a href="{% url 'detail' news_list.7.uniquekey %}" target="_blank">{{ news_list.7.title }}</a></li>
+								<li><a href="{% url 'detail' news_list.8.uniquekey %}" target="_blank">{{ news_list.8.title }}</a></li>
+							</ul>
+						</div>
+					</div>
+					{% endfor %}
+							
+				</div>
+				
+				<!-- 下半部分右边  推荐等 -->
+				<div class="home-col tr">
+					<div class="recommend">
+						<div class="small-title clearfix">
+							<h2><a href="" target="_blank">为你推荐</a></h2>
+						</div>
+						
+						<ul class="home-list recommend-list">
+							{% for news in news_other.news_recommend %}
+								{% if forloop.first or forloop.counter == 5 or forloop.counter == 11 %}
+								<li class="home-list-pic">
+									<div class="pic-and-text clearfix">
+										<a href="{% url 'detail' news.uniquekey %}" target="_blank" class="pic-change tl"><img src="{{ news.thumbnail_pic }}" /></a>
+										<div class="pic-text recommend-pic-text tl" >
+											<a href="{% url 'detail' news.uniquekey %}" target="_blank" >
+												<p>{{ news.title }}</p>
+											</a>
+											<span class="pic-span">{{ news.author_name }}</span>
+										</div>
+									</div>
+								</li>
+								{% else %}
+								<li><a href="{% url 'detail' news.uniquekey %}" target="_blank">{{ news.title }}</a></li>
+								{% endif %}
+							{% endfor %}
+						</ul>		
+					</div>
+
+					{% for news_list in news_down2 %}
+					<div class="under-recommend">
+						<div class="small-title small-title-1 small-title-down clearfix">
+							<h2><a href="{{ news_list.0.category.category_py }}">{{ news_list.0.category.category_ch }}</a></h2>
+						</div>
+						<div class="pic-and-text clearfix">
+							<a href="{% url 'detail' news_list.0.uniquekey %}" class="pic-change tl" target="_blank"><img src="{{ news_list.0.thumbnail_pic }}" /></a>
+							<div class="pic-text recommend-pic-text tl">
+								<a href="{% url 'detail' news_list.0.uniquekey %}" target="_blank">
+									<p>{{ news_list.0.title }}</p>
+								</a>
+								<span class="pic-span">{{ news_list.0.author_name }}</span>
+							</div>
+						</div>
+						
+						<ul class="home-list under-recommend-list">	
+							<li><a href="{% url 'detail' news_list.1.uniquekey %}" target="_blank">{{ news_list.1.title }}</a></li>
+							<li><a href="{% url 'detail' news_list.2.uniquekey %}" target="_blank">{{ news_list.2.title }}</a></li>
+							<li><a href="{% url 'detail' news_list.3.uniquekey %}" target="_blank">{{ news_list.3.title }}</a></li>	
+						</ul>
+					</div>
+					{% endfor %}
+						
+				</div>
+			</div>
+		</div>
+
+		{% include 'components/footer.html' %}
+		
+		<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+		<script src="{% static 'myHTML/js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'myHTML/js/jbase.js' %}"></script>
+	</body>
+</html>
+<script>
+	function search_news(){
+        if($("input[name=keyword]").val()){
+            $("#search-form").submit();
+        }else{
+            alert('搜索内容不能为空');
+        } 
+	}
+</script>

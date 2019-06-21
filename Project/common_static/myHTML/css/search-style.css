@@ -1,0 +1,11 @@
+.panel{
+    margin-top: 20px;
+}
+
+.table a{
+    display: block;
+	width: 550px!important;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}

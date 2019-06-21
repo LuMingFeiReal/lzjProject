@@ -1,0 +1,98 @@
+/* kind上面三张图 */
+.up-tabs{
+	margin-bottom: 30px;
+	padding-left: 10px;
+}
+.up-tab-pic{
+	position: relative;
+}
+.up-tab-pic p{
+	padding-left: 10px;
+
+	height: 30px;
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+
+	font-size: 14px;
+	line-height: 30px;
+	position: absolute;
+	background-color: #0F0F0F;
+	color: white;
+	bottom: 0px;
+}
+.up-tab-pic img{
+	height: 100%;
+	width: 100%;
+}
+.up-tab-pic a{
+	display: block;
+	overflow: hidden;
+}
+.up-tabs-pic1{
+	width: 420px;
+    height: 270px;
+	float: left;
+	margin-right: 30px;
+}
+.up-tabs-pic1 img{
+	height: 270px!important;
+}
+.item img{
+	height: 270px!important;
+	width: 420px!important;
+}
+.up-tabs-pic2{
+	float: left;
+}
+.up-tabs-pic3{
+	float: left;
+	margin-top: 20px;
+}
+.up-tabs-pic2 a{
+	width: 210px;
+	height: 125px;
+}
+.up-tabs-pic3 a{
+	width: 210px;
+	height: 125px;
+}
+
+/* kind列表 */
+.pic-and-text{
+	padding: 20px 10px;
+	border-top: 1px #c6c6c6 solid;
+	width: 680px;
+}
+.pic-and-text>a{
+	height: 130px;
+}
+.pic-text{
+	width: 420px;
+	height: 130px;
+	margin-left: 30px;
+}
+.pic-text p{
+	font-size: 18px;
+	line-height: 26px;
+}
+.pic-text a{
+	color: #337ab7;
+}
+.pic-text a:hover{
+	color: #23527c;
+}
+.pic-span{
+	color: black;
+}
+.pic-and-text:hover{
+	background-color: #f0f0f0;
+}
+
+/* 右侧 */
+.tabs-news{
+	margin-bottom: 50px;
+}
+
+

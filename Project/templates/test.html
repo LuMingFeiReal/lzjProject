@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load my_tags %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    这是错误代码{% error_code 'CODE_ERROR' %}
+    <img src="{% static 'img/1.jpg' %}" alt="">
+    <div id="test">
+
+    </div>
+</body>
+</html>
+<script>
+    
+    function IsMobile() {
+        var isMobile = {
+            Android: function () {
+                return navigator.userAgent.match(/Android/i) ? true : false;
+            },
+            BlackBerry: function () {
+                return navigator.userAgent.match(/BlackBerry/i) ? true : false;
+            },
+            iOS: function () {
+                return navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false;
+            },
+            Windows: function () {
+                return navigator.userAgent.match(/IEMobile/i) ? true : false;
+            },
+            any: function () {
+                return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Windows());
+            }
+        };
+
+        return isMobile.any(); //是移动设备
+    }
+    console.log(IsMobile());
+    alert(IsMobile());
+</script>

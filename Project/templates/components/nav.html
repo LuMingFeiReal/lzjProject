@@ -1,0 +1,87 @@
+{% load staticfiles %}
+
+<!-- 导航栏 -->
+<style>
+    @media screen and (max-width: 1500px) {
+        .sty1{
+	        display: none;
+        }
+        .sty2{
+            display: block;
+        }
+
+    }
+</style>
+
+<nav class="my-navbar clearfix" id="navbar2">
+    <div class="logo my-nav-logo clearfix">
+        <img src="{% static 'myHTML/img/logo1.png' %}" >
+        <span>新闻资讯</span>
+    </div>
+    
+    <ul class="my-nav-ul clearfix">
+        <li><a href="{% url 'home' %}">首页</a></li>
+        <li id="top"><a href="{% url 'kind' 'top' %}">头条</a></li>
+        <li id="shehui"><a href="{% url 'kind' 'shehui' %}">社会</a></li>
+        <li id="guonei"><a href="{% url 'kind' 'guonei' %}">国内</a></li>
+        <li id="guoji"><a href="{% url 'kind' 'guoji' %}">国际</a></li>
+        <li id="yule"><a href="{% url 'kind' 'yule' %}">娱乐</a></li>
+        <li id="tiyu"><a href="{% url 'kind' 'tiyu' %}">体育</a></li>
+
+        <li id="junshi" class="sty1"><a href="{% url 'kind' 'junshi' %}">军事</a></li>
+        <li id="keji" class="sty1"><a href="{% url 'kind' 'keji' %}">科技</a></li>
+        <li id="caijing" class="sty1"><a href="{% url 'kind' 'caijing' %}">财经</a></li>
+        <li id="shishang" class="sty1"><a href="{% url 'kind' 'shishang' %}">时尚</a></li>
+        <li id="bgq" class="sty1"><a href="{% url 'wall' %}">曝光墙</a></li>
+     
+
+        <li class="dropdown sty2">
+            <a class="more-category dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                更多
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu more-dropdown" aria-labelledby="dropdownMenu1">
+                <li id="junshi"><a href="{% url 'kind' 'junshi' %}">军事</a></li>
+                <li id="keji"><a href="{% url 'kind' 'keji' %}">科技</a></li>
+                <li id="caijing"><a href="{% url 'kind' 'caijing' %}">财经</a></li>
+                <li id="shishang"><a href="{% url 'kind' 'shishang' %}">时尚</a></li>
+                <li id="bgq"><a href="{% url 'wall' %}">曝光墙</a></li>
+            </ul>
+        </li>
+    </ul>
+    
+    {% if user.is_authenticated %}
+    <div class="dropdown have_login">
+        <a id="dLabel" data-target="#" href="javascript:void(0);" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            {{ user.newsuser.nickname }} 你好！
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="dLabel">
+            <li><a href="{% url 'personal' %}">个人中心</a></li>
+            <li><a href="{% url 'logout' %}">退出登录</a></li>
+        </ul>
+    </div>
+    {% else %}
+    <div class="nav-bt">
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"  data-backdrop="static" onclick="choose_login()">登陆</button>
+		<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"  data-backdrop="static" onclick="choose_register()">注册</button>
+    </div>
+    {% endif %}
+    <form class="form-inline my-nav-search" action="{% url 'search' %}" method="get" id="search-form">
+        <div class="form-group">
+            <label for="exampleInputEmail1"></label>
+            <input type="text" class="form-control" id="" placeholder="Search" name='keyword'>
+        </div>
+        <button onclick="search_news()" type="button" class="btn btn-primary">搜索</button>
+    </form>
+</nav>
+
+<script>
+    function search_news(){
+        if($("input[name=keyword]").val()){
+            $("#search-form").submit();
+        }else{
+            alert('搜索内容不能为空');
+        } 
+    }
+</script>
